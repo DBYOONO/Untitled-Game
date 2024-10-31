@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cisip8jdvy4m2"]
+
+[ext_resource type="ArrayMesh" uid="uid://u3xmdcl2kval" path="res://gun.obj" id="1_ylb8m"]
+
+[node name="Pistol" type="Node3D"]
+
+[node name="Gun" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 0, 0, 0)
+mesh = ExtResource("1_ylb8m")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
