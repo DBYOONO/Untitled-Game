@@ -3,6 +3,7 @@ extends CharacterBody3D
 var SPEED = 3.0
 var equipped = 0
 var bullettrail = load("res://bullettrail.tscn")
+var ammobox = load("res://Ammopickup.tscn")
 var instance
 const JUMP_VELOCITY = 4.5
 var flashlighttoggle = 0
@@ -10,6 +11,7 @@ var isads = 0
 var flashlightstorage = 0
 var battery = 100
 var ammo = 10
+var ammopickup
 
 func _ready() -> void:
 	pass
@@ -33,6 +35,13 @@ func _ready() -> void:
 @onready var flash1 = $Neck/Camera3D/Gun/Barrel/Flash1
 @onready var flash2 = $Neck/Camera3D/Gun/Barrel/Flash2
 @onready var flashtimer = $Neck/Camera3D/Gun/Barrel/Timer
+@onready var raincheck = $Raincheck
+@onready var rainsound = $Rainsound
+@onready var rainsoundM = $RainsoundM
+@onready var emptyclick = $Neck/Camera3D/Gun/Emptyclick
+
+@onready var intcheck = $Neck/Camera3D/InteractCheck
+@onready var ammopickup2 = $"../Pickup/RigidBody3D"
 
 @onready var b_decal = load("res://b_decal.tscn")
 
@@ -74,7 +83,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 		
-	if Input.is_action_just_pressed("Shoot") and equipped == 1 and !gunanim3.is_playing():
+	if Input.is_action_just_pressed("Shoot") and equipped == 1 and !gunanim3.is_playing() and !anim.is_playing():
 		if ammo >= 1:
 			if !gun_anim.is_playing():
 				
@@ -96,8 +105,17 @@ func _physics_process(delta: float) -> void:
 					world.hitpartfunc()
 				
 		else:
-			gunanim3.play("reload")
-			ammo = 10
+			
+			if Global.ammocount < 10 and Global.ammocount > 0:
+				ammo = Global.ammocount
+				Global.ammocount = 0
+				gunanim3.play("reload")
+			elif Global.ammocount >= 10:
+				Global.ammocount = Global.ammocount + (ammo - 10)
+				ammo = 10
+				gunanim3.play("reload")
+			else:
+				emptyclick.play()
 	if Input.is_action_just_pressed("Equip") and equipped == 1 and isads == 0:
 		gun_anim2.stop()
 		anim.play("Unequip")
@@ -147,12 +165,37 @@ func _physics_process(delta: float) -> void:
 		battery += 100
 		
 	if Input.is_action_just_pressed("Reload") and ammo <= 9:
-		gunanim3.play("reload")
-		ammo = 10
 		
+		if Global.ammocount < 10 and Global.ammocount > 0:
+			ammo = Global.ammocount
+			Global.ammocount = 0
+			gunanim3.play("reload")
+		elif Global.ammocount >= 10:
+			Global.ammocount = Global.ammocount + (ammo - 10)
+			ammo = 10
+			gunanim3.play("reload")
+		else:
+			emptyclick.play()
 		
-	move_and_slide()
-
+	if raincheck.is_colliding() == false:
+		rainsoundM.play()
+	else:
+		rainsound.play()
+		
+	if Input.is_action_just_pressed("Interact"):
+		if intcheck.get_collider() is RigidBody3D:
+			var a = intcheck.get_collider()
+			Global.ammocount += 30
+			a.queue_free()
+	
+	if Input.is_action_just_pressed("reloadflash"):
+		var a = ammobox.instantiate()
+		world.add_child(a)
+		a.global_transform.origin = (aim_ray.get_collision_point() + Vector3.UP)
+		ammopickup = a
+		
+	move_and_slide()	
+	print(intcheck.get_collider())
 		
 
 

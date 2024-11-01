@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://bxnuf8dkp1763"]
+
+[ext_resource type="Script" path="res://rigid_body_3d.gd" id="1_nxqh7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_xwsm3"]
+size = Vector3(0.3, 0.14, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dfq7m"]
+custom_solver_bias = 1.0
+margin = 5.0
+size = Vector3(0.3, 0.14, 0.2)
+
+[node name="Pickup" type="Node3D"]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("1_nxqh7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+mesh = SubResource("BoxMesh_xwsm3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(0.756244, 0, 0, 0, 0.756244, 0, 0, 0, 0.756244, 0, 0, 0)
+shape = SubResource("BoxShape3D_dfq7m")
+
+[connection signal="body_entered" from="RigidBody3D" to="RigidBody3D" method="_on_body_entered"]

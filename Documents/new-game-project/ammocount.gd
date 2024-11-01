@@ -8,7 +8,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	text = str(info.ammo, "/10")
+	text = str(info.ammo, "/", Global.ammocount)
 	if info.equipped == 1:
 		visible = true
 	else:
