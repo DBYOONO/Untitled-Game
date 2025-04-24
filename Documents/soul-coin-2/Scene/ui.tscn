@@ -1,0 +1,140 @@
+[gd_scene load_steps=12 format=3 uid="uid://dl70g17jpyh0g"]
+
+[ext_resource type="PackedScene" uid="uid://dsxbpk00ovwk7" path="res://Assets/Coin.glb" id="1_bpjw8"]
+[ext_resource type="Script" uid="uid://cyts8ibo65pvd" path="res://Scene/select.gd" id="1_lfpiq"]
+[ext_resource type="Texture2D" uid="uid://dy1ynmepngyvs" path="res://Assets/f1b438c12ff2d802.jpg" id="2_lfpiq"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_xb563"]
+font_size = 50
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="GDScript" id="GDScript_6jcrg"]
+script/source = "extends Label
+func _ready() -> void:
+	visible = Globals.TailsL
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_urowa"]
+height = 0.3
+radius = 0.04
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_urowa"]
+top_radius = 0.035
+bottom_radius = 0.035
+height = 0.003
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ls17r"]
+albedo_color = Color(0.377716, 0.144494, 0.0690049, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lfpiq"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_urowa"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thkpk"]
+albedo_color = Color(0.151276, 0.151276, 0.151276, 1)
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="HeadsL" type="Label" parent="CanvasLayer"]
+offset_left = 497.0
+offset_top = 451.0
+offset_right = 660.0
+offset_bottom = 520.0
+text = "HEADS"
+label_settings = SubResource("LabelSettings_xb563")
+
+[node name="TailsL" type="Label" parent="CanvasLayer"]
+offset_left = 509.0
+offset_top = 451.0
+offset_right = 640.0
+offset_bottom = 520.0
+text = "TAILS"
+label_settings = SubResource("LabelSettings_xb563")
+script = SubResource("GDScript_6jcrg")
+
+[node name="Select" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.259076, 0.466928, 0.216289)
+script = ExtResource("1_lfpiq")
+
+[node name="OPH" type="Node3D" parent="Select"]
+
+[node name="RigidBody3D2" type="RigidBody3D" parent="Select/OPH"]
+collision_layer = 0
+collision_mask = 0
+gravity_scale = 0.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Select/OPH/RigidBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0319229, 0.096563, -0.0873675)
+shape = SubResource("CylinderShape3D_urowa")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Select/OPH/RigidBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0334767, 0.0965298, -0.0852397)
+mesh = SubResource("CylinderMesh_urowa")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_ls17r")
+
+[node name="Decal" type="Decal" parent="Select/OPH/RigidBody3D2/MeshInstance3D"]
+transform = Transform3D(0.0203315, 8.32667e-17, 2.79397e-09, 3.11418e-14, 0.00248989, 2.84217e-14, -5.58794e-09, -1.11022e-16, 0.033052, -0.00182502, -0.002103, 0.00125978)
+size = Vector3(2, 2, 1.46338)
+texture_albedo = ExtResource("2_lfpiq")
+
+[node name="Area3D" type="Area3D" parent="Select/OPH/RigidBody3D2"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Select/OPH/RigidBody3D2/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0324147, 0.107062, -0.0873675)
+shape = SubResource("CylinderShape3D_urowa")
+
+[node name="NZ50" type="Node3D" parent="Select"]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Select/NZ50"]
+collision_layer = 0
+collision_mask = 0
+gravity_scale = 0.0
+
+[node name="Coin" parent="Select/NZ50/RigidBody3D" instance=ExtResource("1_bpjw8")]
+transform = Transform3D(-0.164368, 0, 0.244892, 0, 0.313177, 0, -0.244892, 0, -0.164368, 0.122083, 0.096186, -0.0880042)
+
+[node name="Area3D" type="Area3D" parent="Select/NZ50/RigidBody3D"]
+disable_mode = 2
+collision_layer = 0
+collision_mask = 0
+input_capture_on_drag = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Select/NZ50/RigidBody3D/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.121988, 0.107982, -0.0862438)
+shape = SubResource("CylinderShape3D_urowa")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Select/NZ50/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.121502, 0.096563, -0.0862438)
+shape = SubResource("CylinderShape3D_urowa")
+
+[node name="Area3D" type="Area3D" parent="Select"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0576687, -0.320711, -0.0820221)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Select/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.245208, 0.338333, -0.294445)
+shape = SubResource("BoxShape3D_lfpiq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Select/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.249953, 0.323996, -0.300536)
+mesh = SubResource("BoxMesh_urowa")
+surface_material_override/0 = SubResource("StandardMaterial3D_thkpk")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 2.98023e-08, 1, 0, -1, 2.98023e-08, 0, 1.84217, 0)
+
+[connection signal="mouse_entered" from="Select/OPH/RigidBody3D2/Area3D" to="Select" method="_on_area_3d_mouse_entered"]
+[connection signal="mouse_entered" from="Select/Area3D" to="Select" method="_on_area_3d_mouse_entered"]
